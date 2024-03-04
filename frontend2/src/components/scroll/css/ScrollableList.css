@@ -1,0 +1,36 @@
+#scrollableDiv {
+    height: 400px;
+    overflow: auto;
+    padding: 0 16px;
+    scrollbar-width: thin; 
+    scrollbar-color: #1890ff rgba(0, 0, 0, 0.1); 
+  }
+  
+  #scrollableDiv::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  #scrollableDiv::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); 
+    border-radius: 10px; 
+  }
+  
+  #scrollableDiv::-webkit-scrollbar-thumb {
+    background-color: #1890ff; 
+    border-radius: 10px; 
+    border: 2px solid transparent; 
+    background-clip: content-box;
+  }
+  
+  #scrollableDiv::-webkit-scrollbar-thumb:hover {
+    background-color: #096dd9;
+  }
+
+  .scrollable-list .ant-list-item-meta-description {
+    color: #1890ff !important;
+  }
+
+  .scrollable-list .ant-list-item-meta-title {
+    color: #1890ff !important;
+  }
+  

@@ -1,0 +1,30 @@
+.logo-vertical {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  color: #ececec;
+  background: #337aff;
+  border-radius: 20px;
+}
+
+.header-title {
+  color: white;
+  text-align: center;
+  margin: 0;
+  font-size: 2em;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 2.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 2em; 
+  }
+}

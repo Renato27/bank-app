@@ -1,0 +1,13 @@
+.add-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.floating-button {
+  top: 2px;
+  bottom: 20px;
+  right: 20px;
+  width: 60px !important;
+  height: 60px !important;
+}

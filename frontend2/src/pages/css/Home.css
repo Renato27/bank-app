@@ -1,0 +1,9 @@
+.content-div {
+    padding: 24px;
+    background: #ececec;
+    border-radius: 20px;
+    min-height: 360px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}

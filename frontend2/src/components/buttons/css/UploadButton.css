@@ -1,0 +1,18 @@
+.upload-button .ant-upload {
+    width: 100% !important;
+    height: auto !important;
+    border: 1px dashed #1890ff;
+    color: #1890ff;
+  }
+
+  .upload-button .ant-upload button {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    padding: 70px !important;
+    background-color: #ffff !important;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    font-size: 26px;
+  }

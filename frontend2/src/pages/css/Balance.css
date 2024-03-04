@@ -1,0 +1,15 @@
+.container-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plus-icon {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.plus-icon span {
+  margin-top: 10px;
+}
