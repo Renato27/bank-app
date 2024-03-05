@@ -16,7 +16,6 @@ class TransactionController extends Controller
     public function index(TransactionsFilterRequest $request)
     {
         try {
-            dd($request->all());
             $transactions = app(TransactionRespositoryInterface::class)->getTransactions($request);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {

@@ -102,10 +102,10 @@ const LayoutResponsive = () => {
                 breakpoint="lg"
                 collapsedWidth="0"
                 onBreakpoint={(broken) => {
-                    console.log(broken);
+
                 }}
                 onCollapse={(collapsed, type) => {
-                    console.log(collapsed, type);
+   
                     if (type === 'clickTrigger' && !collapsed) {
                         setDirection('vertical')
                         setSpaceJustify('space-around');

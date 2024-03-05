@@ -21,7 +21,7 @@ const Login = () => {
     const location = useLocation();
     const onFinish = async (values: AuthType) => {
         try {
-            console.log('Received values of form: ', values);
+
             const response = await login(values);
 
             if (!response) throw new Error('Error logging in');

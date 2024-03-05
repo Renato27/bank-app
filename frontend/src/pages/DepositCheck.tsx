@@ -32,7 +32,6 @@ const DepositCheck = () => {
       form.resetFields();
       navigate('/');
     } catch (error) {
-      console.log(error);
       const errorMessage = getErrorMessage(error);
       showMessage(errorMessage, 'error');
     }

@@ -14,7 +14,7 @@ const DatePickerScroll = ({setDateValue}: DatePickerScrollProps) => {
         if(!date) return;
 
         const formattedDate = date.format('YYYY-MM');
-        console.log(formattedDate);
+
         setDate(date);
         setDateValue(String(date));
     };

@@ -12,7 +12,6 @@ const SignupForm = () => {
     const navigate = useNavigate();
     const onFinish = async (values: AuthType) => {
         try {
-            console.log('Received values of form: ', values);
             const response = await signup(values);
 
             if (!response) throw new Error('Error signing up');

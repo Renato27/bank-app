@@ -1,15 +1,25 @@
 FROM php:8.1-fpm
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    git \
-    unzip \
-    libzip-dev \
-    libonig-dev \
-    libxml2-dev \
-    libpq-dev \
-    nginx \
-    && docker-php-ext-install pdo_mysql zip mbstring exif pcntl bcmath pgsql pdo_pgsql
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+  && apt-get install -y \
+  git \
+  curl \
+  libpng-dev \
+  libonig-dev \
+  libxml2-dev \
+  zip \
+  unzip \
+  zlib1g-dev \
+  libpq-dev \
+  libzip-dev \
+  nginx && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+  && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath gd
 
 WORKDIR /api
 
@@ -33,8 +43,10 @@ RUN chmod -R 775 /api/storage /api/bootstrap/cache
 COPY /nginx/nginx.conf /etc/nginx/sites-available/default
 RUN if [ ! -e /etc/nginx/sites-enabled/default ]; then ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default; fi
 
-COPY ./.docker/entrypoint.sh /entrypoint.sh
+COPY .docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+EXPOSE 80
 
 ENTRYPOINT [ "/entrypoint.sh"]
 
