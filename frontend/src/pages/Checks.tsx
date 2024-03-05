@@ -96,7 +96,7 @@ const Checks = () => {
     return (
 
         <Space direction="vertical" style={{ width: '100%' }}>
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} className="tabs-check" />;
+            <Tabs defaultActiveKey="1" items={items} onChange={onChange} className="tabs-check" />
             <Card style={{ backgroundColor: '#addaf0' }}>
                 <div className="container-card">
                     <div >
