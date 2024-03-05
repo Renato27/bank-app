@@ -1,7 +1,7 @@
 export type DataType = {
     id?: number;
     user?: string;
-    value: number;
+    amount: number;
     date?: string;
     description: string;
     type: BalanceType;

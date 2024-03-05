@@ -1,80 +1,84 @@
-import { Button, Form } from "antd";
+import { Button } from "antd";
 import CurrentBalanceCard from "../components/card-balance/CurrentBalanceCard";
-import {
-    DollarOutlined,
-    CalendarOutlined,
-    EditOutlined
-} from '@ant-design/icons';
-import { DataType } from "./types/balance-type";
+import { BalanceType } from "./types/balance-type";
 import FloatInput from "../components/float-input/FloatInput";
 import { ChangeEvent, useState } from "react";
+import { createTransaction } from "../api/api";
+import { useNavigate } from "react-router-dom";
+import { useMessage } from "../context/MessageContext";
+import { getErrorMessage } from "../helpers/helpers";
 
 const Purchase = () => {
-    const [form] = Form.useForm();
-    const [value, setValue] = useState<string>("");
-    const [date, setDate] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const navigate = useNavigate();
+  const [description, setDescription] = useState<string>("");
+  const { showMessage } = useMessage();
 
-    const onFinish = (values: DataType) => {
-        console.log('Received values of form: ', values);
-    };
+  const dispatchData = async () => {
+    try {
+      const payload = {
+        amount: parseFloat(amount),
+        description: description,
+        date: date,
+        type: 'debit' as BalanceType
+      }
+      const response = await createTransaction(payload);
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { value, id } = e.target;
+      if (!response) throw new Error("Error to create purchase");
 
-        if (id === "value") setValue(value);
-        if (id === "date") setDate(value);
-        if (id === "description") setDescription(value);
-      };
-      
-    return (
-        <>
-        <CurrentBalanceCard date={false}/>
-        <Form form={form} layout="vertical" onFinish={onFinish} className="purchase-form">
-        <Form.Item name="value">
-             <FloatInput 
-                labelText="Amount"
-                type="text"
-                id="value"
-                inputText={value}
-                handleChange={handleChange}
-                autoFocus
-                icon={<DollarOutlined />}
-            />
-        </Form.Item>
-  
-        <Form.Item name="date">
-         <FloatInput 
-            labelText=""
-            type="date"
-            id="date"
-            inputText={date}
-            handleChange={handleChange}
-            autoFocus
-            icon={<CalendarOutlined />}
+      navigate('/');
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      showMessage(errorMessage, 'error');
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, id } = e.target;
+
+    if (id === "amount") setAmount(value);
+    if (id === "date") setDate(value);
+    if (id === "description") setDescription(value);
+  };
+
+  return (
+    <>
+      <CurrentBalanceCard date={false} />
+      <div className="purchase-form">
+        <FloatInput
+          labelText="Amount"
+          type="text"
+          id="amount"
+          inputText={amount}
+          handleChange={handleChange}
+          autoFocus
         />
-        </Form.Item>
-  
-        <Form.Item name="description">
-          <FloatInput 
-            labelText="Description"
-            type="text"
-            id="description"
-            inputText={description}
-            handleChange={handleChange}
-            autoFocus
-            icon={<EditOutlined />}
+
+        <FloatInput
+          labelText=""
+          type="date"
+          id="date"
+          inputText={date}
+          handleChange={handleChange}
+          autoFocus
         />
-        </Form.Item>
-  
-        <Form.Item>
-          <Button type="primary" htmlType="submit" style={{width: '100%', padding: 20}}>
-            Add Purchase
-          </Button>
-        </Form.Item>
-      </Form>
-      </>
-    );
+
+        <FloatInput
+          labelText="Description"
+          type="text"
+          id="description"
+          inputText={description}
+          handleChange={handleChange}
+          autoFocus
+        />
+
+        <Button type="primary" htmlType="button" style={{ width: '100%', padding: 20 }} onClick={dispatchData}>
+          Add Purchase
+        </Button>
+      </div>
+    </>
+  );
 };
 
 export default Purchase;

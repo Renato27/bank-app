@@ -6,6 +6,7 @@ import { DataType } from "../../pages/types/balance-type";
 
 const CurrentBalanceCard = ({ date }: { date: boolean }) => {
     const [balance, setBalance] = useState(0);
+    const [dateValue, setDateValue] = useState('');
 
     useEffect(() => {
         try {
@@ -15,7 +16,7 @@ const CurrentBalanceCard = ({ date }: { date: boolean }) => {
                 if (!results) return setBalance(0);
 
                 const balance = results.reduce((acc, item) => {
-                    const value = parseFloat(String(item.value));
+                    const value = parseFloat(String(item.amount));
                     return item.type === 'credit' ? acc + value : acc - value;
                 }, 0.0);
                 setBalance(balance);
@@ -35,7 +36,7 @@ const CurrentBalanceCard = ({ date }: { date: boolean }) => {
                 <h1>${balance}</h1>
                 {date && (
                     <div >
-                        <DatePickerScroll />
+                        <DatePickerScroll setDateValue={setDateValue}/>
                     </div>
                 )}
             </div>

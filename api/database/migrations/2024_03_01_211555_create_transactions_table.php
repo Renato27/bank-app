@@ -17,7 +17,8 @@ return new class extends Migration
             $table->decimal('amount', 8, 2)->default(0);
             $table->string('description')->nullable();
             $table->text('image')->nullable();
-            $table->enum('status', TransactionStatusEnum::getValues())->default(TransactionStatusEnum::PENDING);
+            $table->dateTime('date')->useCurrent();
+            $table->enum('status', TransactionStatusEnum::getValues())->default('pending');
             $table->foreignId('transaction_type_id')->nullable()->constrained();
             $table->foreignId('user_id')->nullable()->constrained();
             $table->timestamps();

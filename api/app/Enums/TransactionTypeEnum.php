@@ -12,4 +12,8 @@ enum TransactionTypeEnum: string {
             self::DEBIT => 'Debit',
         };
     }
+
+    public static function getValues(): array {
+        return array_map(fn($case) => $case->value, self::cases());
+    }
 }

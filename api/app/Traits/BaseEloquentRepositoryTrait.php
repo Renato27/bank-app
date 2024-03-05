@@ -144,10 +144,10 @@ trait BaseEloquentRepositoryTrait
     /**
      * It includes an array to compose the where in the model.
      *
-     * @param array $data
+     * @param mixed $data
      * @return Model|null
      */
-    public function where(array $data)
+    public function where(mixed $data)
     {
         return $this->model->where($data);
     }

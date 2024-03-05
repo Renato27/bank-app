@@ -10,54 +10,50 @@ import {
 } from '@ant-design/icons';
 import CurrentBalanceCard from "../components/card-balance/CurrentBalanceCard";
 import { Link } from "react-router-dom";
+import { useMessage } from "../context/MessageContext";
+import { getErrorMessage } from "../helpers/helpers";
+import { useOnLoadMore } from "../hooks/useOnLoadMore";
 
 const Balance = () => {
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<DataType[]>([]);
+    const { showMessage } = useMessage();
     const [incomes, setIncomes] = useState(0);
     const [expenses, setExpenses] = useState(0);
-
-    const onLoadMore = async () => {
-        try {
-            if (loading) return;
-
-            setLoading(true);
-            const results: DataType[] = await transactionsByUser();
-
-            if (!results) setLoading(false);
-
-            const newData = data.concat(results);
-            const incomes = newData.filter(item => item.type === 'credit' && item.status === 'accepted')
-                .reduce((acc, item) => acc + parseFloat(String(item.value)), 0.0);
-            const expenses = newData.filter(item => item.type === 'debit' && item.status === 'accepted')
-                .reduce((acc, item) => acc - parseFloat(String(item.value)), 0.0);
-            setData(newData);
-            setIncomes(incomes);
-            setExpenses(expenses);
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-        }
-
-
-    };
+    const [page, setPage] = useState(1);
+    const { loading, data, onLoadMore } = useOnLoadMore<DataType>({
+        apiFunc: transactionsByUser,
+        statusDiferent: 'rejected'
+    });
 
     useEffect(() => {
-        onLoadMore();
-    }, []);
+        onLoadMore().catch(error => {
+            const errorMessage = getErrorMessage(error);
+            showMessage(errorMessage, 'error');
+        });
+
+        if (!data) return;
+
+        const incomes = data.filter(item => item.type === 'credit' && item.status === 'accepted')
+            .reduce((acc, item) => acc + parseFloat(String(item.amount)), 0.0);
+        const expenses = data.filter(item => item.type === 'debit' && item.status === 'accepted')
+            .reduce((acc, item) => acc - parseFloat(String(item.amount)), 0.0);
+
+        setIncomes(incomes);
+        setExpenses(Math.abs(expenses));
+        setPage(page + 1);
+    }, [data]);
 
 
     const setValue = (item: DataType) => {
 
         if (item.status === 'pending') {
-            return <div style={{ color: '#096dd9' }}>${item.value}</div>;
+            return <div style={{ color: '#096dd9' }}>${item.amount}</div>;
         }
 
         if (item.type === 'credit') {
-            return <div style={{ color: 'green' }}>${item.value}</div>;
+            return <div style={{ color: 'green' }}>${item.amount}</div>;
         }
 
-        return <div style={{ color: 'red' }}>-${item.value}</div>;
+        return <div style={{ color: 'red' }}>-${item.amount}</div>;
 
     };
 

@@ -22,8 +22,8 @@ Route::post('refresh', [AuthController::class, 'refresh']);
 
 Route::middleware('jwt.verify')->group(function () {
     Route::apiResource('transactions', TransactionController::class);
-    Route::get('debit-transactions', [TransactionController::class, 'debitTransactions']);
-    Route::get('credit-transactions', [TransactionController::class, 'creditTransactions']);
+    Route::get('debit-transactions/{userId}', [TransactionController::class, 'debitTransactions']);
+    Route::get('credit-transactions/{userId}', [TransactionController::class, 'creditTransactions']);
     Route::get('transactions-by-user/{userId}', [TransactionController::class, 'showByUser']);
     Route::get('transactions-by-user/{userId}/{status}', [TransactionController::class, 'showByUserAndStatus']);
 });

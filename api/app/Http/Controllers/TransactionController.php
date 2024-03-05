@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TransactionRequest;
+use App\Http\Requests\TransactionsFilterRequest;
 use App\Http\Resources\TransactionResource;
 use App\Repositories\Contracts\TransactionRespositoryInterface;
 use Illuminate\Http\Request;
@@ -11,27 +13,29 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(TransactionsFilterRequest $request)
     {
         try {
-            $transactions = app(TransactionRespositoryInterface::class)->getTransactions();
+            dd($request->all());
+            $transactions = app(TransactionRespositoryInterface::class)->getTransactions($request);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TransactionRequest $request)
     {
         try {
+            $request->validated();
             $data = $request->all();
             $transaction = app(TransactionRespositoryInterface::class)->createTransaction($data);
             return new TransactionResource($transaction);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -44,17 +48,17 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransaction($id);
             return new TransactionResource($transactions);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
+    
     public function showByUser(string $userId)
     {
         try {
             $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByUser($userId);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -64,7 +68,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByUserAndStatus($userId, $status);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -73,14 +77,32 @@ class TransactionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $data = $request->all();
+            $transaction = app(TransactionRespositoryInterface::class)->updateTransaction($id, $data);
+            return new TransactionResource($transaction);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function debitTransactions(string $userId)
     {
-        //
+        try {
+            $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByTypeAndUser($userId, 'debit');
+            return TransactionResource::collection($transactions);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function creditTransactions(string $userId)
+    {
+        try {
+            $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByTypeAndUser($userId, 'credit');
+            return TransactionResource::collection($transactions);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

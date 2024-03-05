@@ -1,15 +1,26 @@
-/* CustomDatePicker.css */
-.custom-dropdown .ant-picker-panel-container {
-    overflow-y: scroll; /* Adiciona a barra de rolagem vertical */
-  }
-  
-  .custom-dropdown .ant-picker-panel {
-    height: auto; /* Ou você pode definir uma altura fixa para limitar a altura do painel */
-  }
-  
-  /* Personalize a aparência das células do calendário, se necessário */
-  .custom-dropdown .ant-picker-cell-inner {
-    text-align: center;
-    /* Adicione mais estilos conforme necessário */
-  }
-  
+/* DatePickerScroll.css */
+
+.date-picker-scroll .ant-picker {
+  width: 100%; /* Faz o date picker expandir para a largura total */
+  border-radius: 10px; /* Borda arredondada */
+}
+
+/* Estilo do painel do DatePicker */
+.date-picker-scroll .ant-picker-panel {
+  border-radius: 10px; /* Borda arredondada */
+}
+
+/* Estilo do input do DatePicker */
+.date-picker-scroll .ant-picker-input input {
+  text-align: center; /* Centraliza o texto do input */
+}
+
+/* Oculta os ícones de próximo e anterior do painel do DatePicker */
+.date-picker-scroll .ant-picker-header .ant-picker-header-super-prev-btn,
+.date-picker-scroll .ant-picker-header .ant-picker-header-super-next-btn,
+.date-picker-scroll .ant-picker-header .ant-picker-header-prev-btn,
+.date-picker-scroll .ant-picker-header .ant-picker-header-next-btn {
+  display: none;
+}
+
+/* Estilo adicional para personalizar conforme sua necessidade */

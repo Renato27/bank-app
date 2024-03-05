@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { DataType } from "../pages/types/balance-type";
+import axios from "axios";
 
 type JWT = {
   iss: string;
@@ -19,7 +20,7 @@ export const mockData = (qtd: number, type?: string) => {
   for (let i = 0; i < qtd; i++) {
     data.push({
       id: i,
-      value: i * 1000,
+      amount: i * 1000,
       date: new Date().toDateString(),
       description: `Description ${i}`,
       type: type ?? i % 2 === 0 ? "credit" : "debit",
@@ -78,3 +79,29 @@ export const isTokenExpired = () => {
   return now > parseInt(expiresAt);
 
 };
+
+export const getErrorMessage = (error: unknown): string => {
+  // Mensagem de erro padrão
+  let errorMessage = "An unexpected error occurred.";
+
+  // Verifica se o erro é uma instância do AxiosError
+  if (axios.isAxiosError(error) && error.response) {
+      const response = error.response;
+
+      if (response.data && response.data.errors) {
+          const errors = response.data.errors;
+          errorMessage = Object.keys(errors)
+              .map(key => errors[key].join(' '))
+              .join(' ');
+      } else if (response.data && response.data.message) {
+          errorMessage = response.data.message;
+      } else if (response.statusText) {
+          errorMessage = response.statusText;
+      }
+  } else if (error instanceof Error) {
+      errorMessage = error.message;
+  }
+
+  return errorMessage;
+};
+

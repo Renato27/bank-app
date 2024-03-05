@@ -4,20 +4,25 @@ import { DataType } from "./types/balance-type";
 import FloatInput from "../components/float-input/FloatInput";
 import UploadButton from "../components/buttons/UploadButton";
 import './css/CheckDetails.css';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { checkById, updateTransaction } from "../api/api";
 
 const CheckDetails = () => {
     const { id } = useParams();
-    const [value, setValue] = useState(0);
+    const navigate = useNavigate();
+    const [amount, setAmount] = useState(0);
     const [image, setImage] = useState("");
     const [user, setUser] = useState<string>("");
 
     const dispatchData = (status: string) => {
         try {
-            const response =  updateTransaction(String(id), { status: status});
+            const response =  updateTransaction(String(id), { status: status });
+
+            if (!response) throw new Error('Error updating data');
+
+            navigate('/admin');
         } catch (error) {
-            
+            throw error;
         }
     };
 
@@ -30,7 +35,7 @@ const CheckDetails = () => {
             if (!response) throw new Error('Error loading data');
 
             if (response.image) setImage(response.image);
-            if (response.value) setValue(response.value);
+            if (response.amount) setAmount(response.amount);
             if (response.user) setUser(response.user);
 
         } catch (error) {
@@ -70,9 +75,9 @@ const CheckDetails = () => {
                     labelText="Amount"
                     type="text"
                     id="value"
-                    inputText={String(value)}
+                    inputText={String(amount)}
                     handleChange={handleChange}
-                    value={value}
+                    value={amount}
                 />
                 <UploadButton setImage={setImage} image={image} />
                 <div className="buttons">

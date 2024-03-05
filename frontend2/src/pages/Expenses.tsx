@@ -1,42 +1,34 @@
 import { Card, Space } from "antd";
 import DatePickerScroll from "../components/datepicker/DatePickerScroll";
 import ScrollableList from "../components/scroll/ScrollableList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataType } from "./types/balance-type";
 import { debitTransactionsByUser } from "../api/api";
-import { mockData } from "../helpers/helpers";
 import ButtunPlus from "../components/buttons/ButtonPlus";
-
-const dataMock: DataType[] = mockData(30, 'debit');
+import { getErrorMessage } from "../helpers/helpers";
+import { useMessage } from "../context/MessageContext";
+import { useOnLoadMore } from "../hooks/useOnLoadMore";
 
 const Expenses = () => {
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<DataType[]>(dataMock);
+    const { showMessage } = useMessage();
+    const [dateValue, setDateValue] = useState('');
+    const { loading, data, onLoadMore } = useOnLoadMore<DataType>({
+        apiFunc: debitTransactionsByUser,
+    });
+
+    useEffect(() => {
+        onLoadMore().catch(error => {
+            const errorMessage = getErrorMessage(error);
+            showMessage(errorMessage, 'error');
+        });
+    }, []);
 
     const handleAddClick = () => {
-        // Implemente a lógica de adição aqui
-        console.log('Add button clicked');
-    };
-
-    const onLoadMore = async () => {
-        try {
-            if (loading) return;
-
-            setLoading(true);
-            const results: DataType[] = await debitTransactionsByUser();
-
-            if (!results) setLoading(false);
-
-            const newData = data.concat(results);
-            setData(newData);
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-        }
+        
     };
 
     const setValue = (item: DataType) => {
-        return <div style={{ color: 'red' }}>-${item.value}</div>;
+        return <div style={{ color: 'red' }}>-${item.amount}</div>;
     };
 
 
@@ -45,7 +37,7 @@ const Expenses = () => {
             <Card style={{ backgroundColor: '#addaf0' }}>
                 <div className="container-card">
                     <div >
-                        <DatePickerScroll />
+                        <DatePickerScroll setDateValue={setDateValue}/>
                     </div>
                 </div>
             </Card>

@@ -2,35 +2,29 @@ import { Card, Space } from "antd";
 import DatePickerScroll from "../components/datepicker/DatePickerScroll";
 import ScrollableList from "../components/scroll/ScrollableList";
 import { DataType } from "./types/balance-type";
-import { useState } from "react";
-import { mockData } from "../helpers/helpers";
+import { useEffect, useState } from "react";
 import { creditTransactionsByUser } from "../api/api";
+import { useOnLoadMore } from "../hooks/useOnLoadMore";
+import { getErrorMessage } from "../helpers/helpers";
+import { useMessage } from "../context/MessageContext";
 
-const dataMock: DataType[] = mockData(30, 'credit');
 
 const Incomes = () => {
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<DataType[]>(dataMock);
+    const { showMessage } = useMessage();
+    const [dateValue, setDateValue] = useState('');
+    const { loading, data, onLoadMore } = useOnLoadMore<DataType>({
+        apiFunc: creditTransactionsByUser,
+    });
 
-    const onLoadMore = async () => {
-        try {
-            if(loading) return;
-
-            setLoading(true);
-            const results: DataType[] = await creditTransactionsByUser();
-
-            if (!results) setLoading(false);
-
-            const newData = data.concat(results);
-            setData(newData);
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-        } 
-    };
+    useEffect(() => {
+        onLoadMore().catch(error => {
+            const errorMessage = getErrorMessage(error);
+            showMessage(errorMessage, 'error');
+        });
+    }, []);
 
     const setValue = (item: DataType) => {
-        return <div style={{ color: 'green' }}>-${item.value}</div>;
+        return <div style={{ color: 'green' }}>${item.amount}</div>;
     };
 
 
@@ -39,7 +33,7 @@ const Incomes = () => {
         <Card style={{ backgroundColor: '#addaf0'}}>
             <div className="container-card">
                 <div >
-                    <DatePickerScroll />
+                    <DatePickerScroll setDateValue={setDateValue}/>
                 </div>
             </div>
         </Card>

@@ -1,36 +1,27 @@
 import { DatePicker, Space } from 'antd';
-import moment, { Moment } from 'moment';
-import {
-    CaretDownOutlined
-} from '@ant-design/icons';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import './css/DatePickerScroll.css';
+import dayjs, { Dayjs } from 'dayjs';
 
-const DatePickerScroll = () => {
-    const [date, setDate] = useState(moment());
+type DatePickerScrollProps = {
+    setDateValue: Dispatch<SetStateAction<string>>;
+}
 
-    const handleChange = (value: Moment) => {
-        console.log(value);
-        setDate(value);
+const DatePickerScroll = ({setDateValue}: DatePickerScrollProps) => {
+    const [date, setDate] = useState(dayjs());
+    const format = 'MMMM YYYY';
+    const handleChange = (date: Dayjs, dateString: string | string[]) => {
+        if(!date) return;
+
+        const formattedDate = date.format('YYYY-MM');
+        console.log(formattedDate);
+        setDate(date);
+        setDateValue(String(date));
     };
 
     return (
         <Space direction="vertical">
-            <DatePicker
-                value={date}
-                onChange={() => handleChange}
-                picker="month"
-                format="MMMM YYYY"
-                popupClassName="custom-month-year-picker-dropdown"
-                suffixIcon={<CaretDownOutlined />}
-                inputReadOnly
-                style={{
-                    width: '100%',
-                    backgroundColor: '#addaf0',
-                    borderColor: 'transparent',
-                    color: '#000',
-                    borderRadius: '4px',
-                }}
-            />
+            <DatePicker onChange={handleChange} defaultValue={dayjs()} format={format} picker="month" />
         </Space>
     );
 };

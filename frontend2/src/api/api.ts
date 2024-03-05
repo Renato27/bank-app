@@ -4,13 +4,12 @@ import { DataType } from "../pages/types/balance-type";
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 
-export async function checkList() {
-    return await axios.get(`${API_URL}/transactions`).then(response => {
+export async function checkList(page?: string, paramsUrl?: string) {
+    const params = `?page=${page}&search=${paramsUrl}`
+    return await axios.get(`${API_URL}/transactions${params}`).then(response => {
         return response.data.data;
     }).catch(error => {
-        
-    }).finally(() => {
-        return 0;
+        throw error;
     })
 }
 
@@ -18,75 +17,66 @@ export async function checkById(id: string) {
     return await axios.get(`${API_URL}/transactions/${id}`).then(response => {
         return response.data.data;
     }).catch(error => {
-        
-    }).finally(() => {
-        return 0;
+        throw error;
     })
 }
 
-export async function checksByUser() {
+export async function checksByUser(page?: string, paramsUrl?: string) {
     const url = createUrlWithUserId(`${API_URL}/transactions`);
-    return await axios.get(url).then(response => {
-        return response.data.data;
-    }).catch(error => {
-        
-    }).finally(() => {
-        return 0;
-    })
-}
-
-
-export async function transactionsByUser() {
-    const url = createUrlWithUserId(`${API_URL}/transactions-by-user`);
-    return await axios.get(url).then(response => {
+    const params = `?page=${page}&search=${paramsUrl}`
+    return await axios.get(`${url}${params}`).then(response => {
         return response.data.data;
     }).catch(error => {
         throw error;
-    }).finally(() => {
-        return 0;
     })
 }
 
-export async function transactionsByUserAndStatus(status: string) {
+
+export async function transactionsByUser(page?: string, paramsUrl?: string) {
     const url = createUrlWithUserId(`${API_URL}/transactions-by-user`);
-    return await axios.get(`${url}/${status}`).then(response => {
+    const params = `?page=${page}&search=${paramsUrl}`
+    return await axios.get(`${url}${params}`).then(response => {
         return response.data.data;
     }).catch(error => {
         throw error;
-    }).finally(() => {
-        return 0;
     })
 }
 
-export async function debitTransactionsByUser() {
+export async function transactionsByUserAndStatus(status: string, page?: string, paramsUrl?: string) {
+    const url = createUrlWithUserId(`${API_URL}/transactions-by-user`);
+    const params = `?page=${page}&search=${paramsUrl}`
+    return await axios.get(`${url}/${status}${params}`).then(response => {
+        return response.data.data;
+    }).catch(error => {
+        throw error;
+    })
+}
+
+export async function debitTransactionsByUser(page?: string, paramsUrl?: string) {
     const url = createUrlWithUserId(`${API_URL}/debit-transactions`);
-    return await axios.get(url).then(response => {
+    const params = `?page=${page}&search=${paramsUrl}`
+    return await axios.get(`${url}${params}`).then(response => {
         return response.data.data;
     }).catch(error => {
         throw error;
-    }).finally(() => {
-        return 0;
     })
 }
 
-export async function creditTransactionsByUser() {
+export async function creditTransactionsByUser(page?: string, paramsUrl?: string) {
     const url = createUrlWithUserId(`${API_URL}/credit-transactions`);
-    return await axios.get(url).then(response => {
+    const params = `?page=${page}&search=${paramsUrl}`
+    return await axios.get(`${url}${params}`).then(response => {
         return response.data.data;
     }).catch(error => {
         throw error;
-    }).finally(() => {
-        return 0;
     })
 }
 
-export async function updateTransaction(id: string, data?: unknown) {
+export async function updateTransaction(id: string, data?: object) {
     return await axios.put(`${API_URL}/transactions/${id}`, data).then(response => {
         return response.data.data;
     }).catch(error => {
         throw error;
-    }).finally(() => {
-        return 0;
     })
 }
 
@@ -95,7 +85,5 @@ export async function createTransaction(data: DataType) {
         return response.data.data;
     }).catch(error => {
         throw error;
-    }).finally(() => {
-        return 0;
     })
 }
