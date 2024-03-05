@@ -5,4 +5,5 @@ export type ScrollableListProps = {
     loading: boolean;
     onLoadMore: () => void;
     setValue: (item: DataType) => JSX.Element;
+    admin?: boolean;
   }

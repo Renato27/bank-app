@@ -20,9 +20,10 @@ const Login = () => {
             if (!response) throw new Error('Error logging in');
 
             const token = response.access_token;
+            const expriresIn = response.expires_in;
             if(!authContext) throw new Error('Error logging in');
 
-            authContext.login(token);
+            authContext.login(token, expriresIn);
             navigate('/');
             
         } catch (error) {

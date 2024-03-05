@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Enums\BalanceTypeEnum;
+use App\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BalanceType extends Model
+class TransactionType extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -15,13 +15,13 @@ class BalanceType extends Model
         'name',
     ];
 
-    public function getType(): BalanceTypeEnum
+    public function getType(): TransactionTypeEnum
     {
-        return BalanceTypeEnum::from($this->name);
+        return TransactionTypeEnum::from($this->name);
     }
 
-    public function balances()
+    public function transactions()
     {
-        return $this->hasMany(Balance::class);
+        return $this->hasMany(Transaction::class);
     }
 }

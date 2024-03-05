@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserTypeEnum;
-use App\Models\User;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -23,17 +22,18 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $user = User::create([
-            'username' => $request->username,
-            'password' => bcrypt($request->password),
-        ]);
+        $data = $request->only('username', 'password');
 
-        $user->userType()->associate(\App\Models\UserType::where('name', UserTypeEnum::CUSTOMER)->first());
-        $user->save();
+        $user = app(UserRepositoryInterface::class)->createUser($data);
 
         $token = JWTAuth::fromUser($user);
 
         return $this->respondWithToken($token);
+    }
+
+    public function refresh()
+    {
+        return $this->respondWithToken(JWTAuth::refresh());
     }
 
     protected function respondWithToken($token)

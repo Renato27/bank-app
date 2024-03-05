@@ -5,9 +5,11 @@ import 'antd/dist/reset.css'
 import './css/SignUp.css'
 import { signup } from '../../api/auth';
 import { useForm } from 'antd/es/form/Form';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
     const [form] = useForm();
+    const navigate = useNavigate();
     const onFinish = async (values: AuthType) => {
         try {
             console.log('Received values of form: ', values);
@@ -16,6 +18,7 @@ const SignupForm = () => {
             if (!response) throw new Error('Error signing up');
 
             form.resetFields();
+            navigate('/login');
         } catch (error) {
             console.error('Error signing up', error);
         }

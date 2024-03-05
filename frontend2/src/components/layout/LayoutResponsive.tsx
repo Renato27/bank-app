@@ -3,10 +3,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import './css/LayoutResponsive.css'
 
 import {
-    DashboardOutlined,
-    FileOutlined,
+    QuestionCircleOutlined,
     PieChartOutlined,
-    TeamOutlined,
+    SettingOutlined,
     UserOutlined,
     ArrowUpOutlined,
     ArrowDownOutlined,
@@ -16,6 +15,7 @@ import {
 import { Outlet, useNavigate } from 'react-router-dom';
 import { DirectionContentType, SpaceJustifyType } from './types/layout-types';
 import AuthContext from '../../context/AuthContext';
+import { decodeToken } from '../../helpers/helpers';
 
 type MenuItem = Required<MenuProps>['items'][number] & {
     url?: string;
@@ -36,21 +36,29 @@ function getItem(
     } as MenuItem;
 }
 
-const items: MenuItem[] = [
-    getItem('Home', '1', <DashboardOutlined />, '/'),
-    getItem('Balance', '2', <PieChartOutlined />, '/balance'),
-    getItem('Incomes', '3', <ArrowUpOutlined />, '/incomes'),
-    getItem('Expenses', '4', <ArrowDownOutlined />, '/expenses'),
-    getItem('Checks', '5', <CreditCardOutlined />, '/checks'),
-    getItem('User', '6', <UserOutlined />),
-    getItem('Team', '7', <TeamOutlined />,),
-    getItem('Files', '8', <FileOutlined />),
+const itemsUser: MenuItem[] = [
+    getItem('Balance', '1', <PieChartOutlined />, '/'),
+    getItem('Incomes', '2', <ArrowUpOutlined />, '/incomes'),
+    getItem('Expenses', '3', <ArrowDownOutlined />, '/expenses'),
+    getItem('Checks', '4', <CreditCardOutlined />, '/checks'),
+    getItem('Profile', '5', <UserOutlined />),
+    getItem('Setting', '6', <SettingOutlined />),
+    getItem('Help', '7', <QuestionCircleOutlined />),
+];
+
+const adminItems: MenuItem[] = [
+    getItem('Check List', '1', <CreditCardOutlined />, '/admin'),
+    getItem('Profile', '2', <UserOutlined />),
+    getItem('Setting', '3', <SettingOutlined />),
+    getItem('Help', '4', <QuestionCircleOutlined />),
+
 ];
 
 const { Content, Footer, Header, Sider } = Layout;
 
 const LayoutResponsive = () => {
     const [selectedKey, setSelectedKey] = useState('1')
+    const [items, setItems] = useState<MenuItem[]>([]);
     const [selectedLabel, setSelectedLabel] = useState<string>('BNB Bank');
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
@@ -71,12 +79,22 @@ const LayoutResponsive = () => {
         }
       };
 
+
+    const menuByType = () =>{
+        const decode = decodeToken();
+        if(decode?.userType === 'admin')
+            return setItems(adminItems);
+
+        return setItems(itemsUser);
+    }
+
     useEffect(() => {
+        menuByType();
         const selectedItem = items.find(item => item.key === selectedKey);
         if (selectedItem) {
           setSelectedLabel(typeof selectedItem.label === 'string' ? selectedItem.label : 'BNB Bank');
         }
-    }, [selectedKey]);
+    }, [selectedKey, items]);
 
     return (
         <Layout style={{ minHeight: '100vh' }}>

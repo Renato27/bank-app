@@ -17,7 +17,7 @@ const Incomes = () => {
             if(loading) return;
 
             setLoading(true);
-            const results: DataType[] = await creditTransactionsByUser(1);
+            const results: DataType[] = await creditTransactionsByUser();
 
             if (!results) setLoading(false);
 

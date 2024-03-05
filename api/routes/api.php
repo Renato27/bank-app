@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,9 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', 'AuthController@login');
-Route::post('register', 'AuthController@register');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('refresh', [AuthController::class, 'refresh']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('jwt.verify')->group(function () {
+    Route::apiResource('transactions', TransactionController::class);
+    Route::get('debit-transactions', [TransactionController::class, 'debitTransactions']);
+    Route::get('credit-transactions', [TransactionController::class, 'creditTransactions']);
+    Route::get('transactions-by-user/{userId}', [TransactionController::class, 'showByUser']);
+    Route::get('transactions-by-user/{userId}/{status}', [TransactionController::class, 'showByUserAndStatus']);
 });

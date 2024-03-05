@@ -23,7 +23,7 @@ const Expenses = () => {
             if (loading) return;
 
             setLoading(true);
-            const results: DataType[] = await debitTransactionsByUser(1);
+            const results: DataType[] = await debitTransactionsByUser();
 
             if (!results) setLoading(false);
 

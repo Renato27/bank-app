@@ -18,3 +18,15 @@ export async function signup(data: AuthType) {
         throw error;
     })
 }
+
+export async function refreshToken() {
+    try {
+      const response = await axios.post(`${API_URL}/refresh`);
+      const { access_token } = response.data;
+      localStorage.setItem('token', access_token);
+      return access_token;
+    } catch (error) {
+      console.error('Erro ao renovar token:', error);
+      return null;
+    }
+  }

@@ -1,7 +1,8 @@
 import { Card } from "antd";
 import DatePickerScroll from "../datepicker/DatePickerScroll";
 import { useEffect, useState } from "react";
-import { balanceByUser } from "../../api/api";
+import { transactionsByUserAndStatus } from "../../api/api";
+import { DataType } from "../../pages/types/balance-type";
 
 const CurrentBalanceCard = ({ date }: { date: boolean }) => {
     const [balance, setBalance] = useState(0);
@@ -9,11 +10,15 @@ const CurrentBalanceCard = ({ date }: { date: boolean }) => {
     useEffect(() => {
         try {
             const fetchBalance = async () => {
-                const results = await balanceByUser(1);
+                const results: DataType[] = await transactionsByUserAndStatus('accepted');
 
                 if (!results) return setBalance(0);
 
-                setBalance(results);
+                const balance = results.reduce((acc, item) => {
+                    const value = parseFloat(String(item.value));
+                    return item.type === 'credit' ? acc + value : acc - value;
+                }, 0.0);
+                setBalance(balance);
             };
 
             fetchBalance();

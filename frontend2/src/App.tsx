@@ -13,6 +13,8 @@ import Incomes from './pages/Incomes';
 import Purchase from './pages/Purchase';
 import DepositCheck from './pages/DepositCheck';
 import Checks from './pages/Checks';
+import CheckList from './pages/CheckList';
+import CheckDetails from './pages/CheckDetails';
 
 function App() {
   return (
@@ -21,17 +23,22 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-           <Route element={<ProtectedRoute redirectTo="/login" />} >
+          <Route element={<ProtectedRoute allowedRoles={['customer']} redirectTo="/login" />} >
             <Route path='/' element={<LayoutResponsive />} >
-              <Route index element={<Home />} />
-              <Route path="balance" element={<Balance />} />
-              <Route path="expenses" element={<Expenses/>} />
-              <Route path="incomes" element={<Incomes/>} />
-              <Route path="purchase" element={<Purchase/>} />
-              <Route path="deposit-check" element={<DepositCheck/>} />
+              <Route index element={<Balance />} />
+              <Route path="expenses" element={<Expenses />} />
+              <Route path="incomes" element={<Incomes />} />
+              <Route path="purchase" element={<Purchase />} />
+              <Route path="deposit-check" element={<DepositCheck />} />
               <Route path="checks" element={<Checks />} />
             </Route>
-           </Route>
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo="/login" />} >
+            <Route path='/admin' element={<LayoutResponsive />} >
+              <Route index element={<CheckList />} />
+              <Route path="check-details/:id" element={<CheckDetails />} />
+            </Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

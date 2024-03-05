@@ -3,7 +3,7 @@ import {
     LoadingOutlined,
     CloudUploadOutlined
 } from '@ant-design/icons';
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import './css/UploadButton.css';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -26,10 +26,14 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
     return isJpgOrPng && isLt2M;
   };
 
-const UploadButton = () => {
+  interface UploadButtonProps {
+    setImage: Dispatch<SetStateAction<string>>;
+    image?: string;
+  }
+
+const UploadButton: React.FC<UploadButtonProps> = ({setImage, image}) => {
     const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string>();
-  
+    const [imageUrl, setImageUrl] = useState<string | undefined>("");
     const handleChange: UploadProps['onChange'] = (info) => {
       if (info.file.status === 'uploading') {
         setLoading(true);
@@ -38,10 +42,17 @@ const UploadButton = () => {
       if (info.file.status === 'done') {
         getBase64(info.file.originFileObj as FileType, (url) => {
           setLoading(false);
-          setImageUrl(url);
+          setImageUrl(image ?? url);
+          setImage(url)
         });
       }
     };
+
+    useEffect(() => {
+      if (image) {
+        setImageUrl(image);
+      }
+    }, [image]);
   
     const uploadButton = (
       <button style={{ border: 0, background: 'none', width: '100%' }} type="button">

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('balance_details', function (Blueprint $table) {
+        Schema::create('transaction_types', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 8, 2);
-            $table->string('description')->nullable();
-            $table->foreignId('balance_id')->constrained();
-            $table->foreignId('balance_type_id')->constrained();
+            $table->enum('name', ['credit', 'debit']);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('balance_details');
+        Schema::dropIfExists('transaction_types');
     }
 };

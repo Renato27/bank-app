@@ -33,4 +33,28 @@
   .scrollable-list .ant-list-item-meta-title {
     color: #1890ff !important;
   }
+
+.scrollable-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scrollable-list-link {
+  flex-grow: 1;
+  margin-right: 16px;
+}
+
+.scrollable-list-link h4 {
+  color: #1890ff !important;
+}
+
+.scrollable-list-link div {
+  color: #1890ff !important;
+}
+
+
+
+
+
   

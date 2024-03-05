@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TransactionStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount', 8, 2)->default(0);
-            $table->foreignId('user_id')->constrained();
+            $table->string('description')->nullable();
+            $table->text('image')->nullable();
+            $table->enum('status', TransactionStatusEnum::getValues())->default(TransactionStatusEnum::PENDING);
+            $table->foreignId('transaction_type_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('balances');
+        Schema::dropIfExists('transactions');
     }
 };

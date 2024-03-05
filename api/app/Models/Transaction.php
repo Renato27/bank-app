@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Balance extends Model
+class Transaction extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'amount',
-        'user_id',
+        'description',
+        'status',
+        'image',
+        'transaction_type_id',
+        'user_id'
     ];
 
     public function user()
@@ -20,8 +24,8 @@ class Balance extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function balenceDetails()
+    public function transactionType()
     {
-        return $this->hasMany(BalanceDetail::class);
+        return $this->belongsTo(TransactionType::class);
     }
 }

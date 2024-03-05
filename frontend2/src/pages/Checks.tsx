@@ -2,7 +2,7 @@ import { Card, Space, Tabs, TabsProps } from "antd";
 import ScrollableList from "../components/scroll/ScrollableList";
 import ButtunPlus from "../components/buttons/ButtonPlus";
 import { DataType } from "./types/balance-type";
-import { debitTransactionsByUser } from "../api/api";
+import { checksByUser, debitTransactionsByUser } from "../api/api";
 import DatePickerScroll from "../components/datepicker/DatePickerScroll";
 import { useState } from "react";
 import { mockData } from "../helpers/helpers";
@@ -42,7 +42,7 @@ const Checks = () => {
             if (loading) return;
 
             setLoading(true);
-            const results: DataType[] = await debitTransactionsByUser(1);
+            const results: DataType[] = await checksByUser();
 
             if (!results) setLoading(false);
 
