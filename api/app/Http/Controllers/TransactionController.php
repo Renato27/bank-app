@@ -19,7 +19,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransactions($request);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -47,7 +47,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransaction($id);
             return new TransactionResource($transactions);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
     
@@ -57,7 +57,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByUser($userId);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -67,7 +67,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByUserAndStatus($userId, $status);
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -81,7 +81,7 @@ class TransactionController extends Controller
             $transaction = app(TransactionRespositoryInterface::class)->updateTransaction($id, $data);
             return new TransactionResource($transaction);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -91,7 +91,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByTypeAndUser($userId, 'debit');
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -101,7 +101,7 @@ class TransactionController extends Controller
             $transactions = app(TransactionRespositoryInterface::class)->getTransactionsByTypeAndUser($userId, 'credit');
             return TransactionResource::collection($transactions);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 }

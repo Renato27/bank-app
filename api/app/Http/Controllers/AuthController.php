@@ -22,13 +22,18 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $data = $request->only('username', 'password');
+        try {
+            $data = $request->only('username', 'password');
 
-        $user = app(UserRepositoryInterface::class)->createUser($data);
-
-        $token = JWTAuth::fromUser($user);
-
-        return $this->respondWithToken($token);
+            $user = app(UserRepositoryInterface::class)->createUser($data);
+    
+            $token = JWTAuth::fromUser($user);
+    
+            return $this->respondWithToken($token);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 401);
+        }
+        
     }
 
     public function refresh()

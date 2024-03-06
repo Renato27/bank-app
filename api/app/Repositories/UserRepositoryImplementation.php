@@ -7,6 +7,8 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Traits\BaseEloquentRepositoryTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserRepositoryImplementation implements UserRepositoryInterface
 {
@@ -14,15 +16,25 @@ class UserRepositoryImplementation implements UserRepositoryInterface
 
     public function createUser(array $data): Model
     {
-        $user = $this->create([
-            'username' => $data['username'],
-            'password' => bcrypt($data['password']),
-        ]);
+        try {
 
-        $user->userType()->associate(\App\Models\UserType::where('name', UserTypeEnum::CUSTOMER)->first());
-        $user->save();
+            $user = $this->where(['username' => $data['username']])->first();
 
-        return $user;
+            if($user) throw new HttpException(400, 'User already exists');
+
+            $user = $this->create([
+                'username' => $data['username'],
+                'password' => bcrypt($data['password']),
+            ]);
+    
+            $user->userType()->associate(\App\Models\UserType::where('name', UserTypeEnum::CUSTOMER)->first());
+            $user->save();
+    
+            return $user;
+        } catch (\Throwable $th) {
+            throw new HttpException(400, $th->getMessage());
+        }
+       
     }
 
     public function getUsers(): Collection

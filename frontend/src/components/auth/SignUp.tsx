@@ -6,10 +6,13 @@ import './css/SignUp.css'
 import { signup } from '../../api/auth';
 import { useForm } from 'antd/es/form/Form';
 import { useNavigate } from 'react-router-dom';
+import { useMessage } from '../../context/MessageContext';
+import { getErrorMessage } from '../../helpers/helpers';
 
 const SignupForm = () => {
     const [form] = useForm();
     const navigate = useNavigate();
+    const { showMessage } = useMessage();
     const onFinish = async (values: AuthType) => {
         try {
             const response = await signup(values);
@@ -19,7 +22,8 @@ const SignupForm = () => {
             form.resetFields();
             navigate('/login');
         } catch (error) {
-            console.error('Error signing up', error);
+            const errorMessage = getErrorMessage(error);
+            showMessage(errorMessage, 'error');
         }
     };
 

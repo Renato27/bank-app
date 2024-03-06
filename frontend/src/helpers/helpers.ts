@@ -81,18 +81,18 @@ export const isTokenExpired = () => {
 };
 
 export const getErrorMessage = (error: unknown): string => {
-  // Mensagem de erro padrão
   let errorMessage = "An unexpected error occurred.";
 
-  // Verifica se o erro é uma instância do AxiosError
   if (axios.isAxiosError(error) && error.response) {
       const response = error.response;
 
-      if (response.data && response.data.errors) {
+      if (response.data && (response.data.errors)) {
           const errors = response.data.errors;
           errorMessage = Object.keys(errors)
               .map(key => errors[key].join(' '))
               .join(' ');
+      } else if (response.data && response.data.error) {
+          errorMessage = response.data.error;
       } else if (response.data && response.data.message) {
           errorMessage = response.data.message;
       } else if (response.statusText) {
